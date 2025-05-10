@@ -19,6 +19,8 @@ import {
   Moon,
   Sun,
   Copy,
+  Github,
+  X,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -51,10 +53,22 @@ export default function InterviewQuestionsPage() {
   const { toast } = useToast()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [showGithubBanner, setShowGithubBanner] = useState(true)
 
   useEffect(() => {
     setMounted(true)
+    // 从localStorage中读取横幅显示状态
+    const bannerState = localStorage.getItem("githubBannerClosed")
+    if (bannerState === "true") {
+      setShowGithubBanner(false)
+    }
   }, [])
+
+  // 关闭横幅并保存状态到localStorage
+  const closeGithubBanner = () => {
+    setShowGithubBanner(false)
+    localStorage.setItem("githubBannerClosed", "true")
+  }
 
   // 添加换一道题的函数
   const getNextRandomQuestion = () => {
@@ -767,6 +781,27 @@ export default function InterviewQuestionsPage() {
   return (
     <div className="container mx-auto py-4 px-4 sm:px-6">
       <div className="flex flex-col space-y-4">
+        {showGithubBanner && (
+          <div className="relative bg-primary/10 border border-primary/20 rounded-lg p-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Github className="h-5 w-5 text-primary" />
+              <p>
+                本项目已开源！访问 <a 
+                  href="https://github.com/ni00/FERusher" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="text-primary font-medium hover:underline"
+                >
+                  Github 仓库
+                </a> 查看源码，如果觉得有用请给个 Star ⭐
+              </p>
+            </div>
+            <Button variant="ghost" size="icon" onClick={closeGithubBanner} className="h-8 w-8">
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+        
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h1 className="text-2xl font-bold">FERusher | 切图仔，冲冲冲！</h1>
 
