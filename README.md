@@ -10,6 +10,11 @@ FERusher 是一个专为前端开发者打造的面试题练习平台。
 
 包括不限于阿里巴巴、字节跳动、腾讯、百度、美团、京东、滴滴、华为、小米、快手、网易、拼多多、B站、知乎、微软中国、亚马逊中国、ThoughtWorks等知名互联网公司。
 
+## 快速链接
+
+- **在线体验**：[https://fe.inxb.top/](https://fe.inxb.top/) - 立即访问部署网站，开始练习面试题
+- **项目详解**：[https://nixiaobai.com/posts/interview-dataset/](https://nixiaobai.com/posts/interview-dataset/) - 查看详细的博客文章了解更多项目背景与实现细节
+
 ## 功能特点
 
 - **问题浏览**：查看来自各大互联网公司的前端面试题
