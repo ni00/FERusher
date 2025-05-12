@@ -831,11 +831,11 @@ export default function InterviewQuestionsPage() {
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-3xl">
-                <DialogHeader>
+                <DialogHeader className="px-1">
                   <DialogTitle>AI模型设置</DialogTitle>
                   <DialogDescription>配置用于AI解析的大语言模型API设置</DialogDescription>
                 </DialogHeader>
-                <div className="max-h-[calc(80vh-120px)] overflow-y-auto pr-1">
+                <div className="max-h-[calc(80vh-120px)] overflow-y-auto px-1">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault()
