@@ -90,5 +90,6 @@
     "commitizen": {
       "path": "cz-customizable"
     }
-  }
+  },
+  "packageManager": "pnpm@8.15.9"
 }
