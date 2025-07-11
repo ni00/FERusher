@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
@@ -16,7 +16,7 @@ export function ThemeToggle() {
   useEffect(() => {
     setMounted(true);
   }, []);
-  
+
   if (!mounted) {
     return null;
   }

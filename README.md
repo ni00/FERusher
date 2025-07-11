@@ -38,33 +38,38 @@ FERusher 是一个专为前端开发者打造的面试题练习平台。
 
 ### 环境要求
 
-- Node.js 18+ 
+- Node.js 18+
 - pnpm 8+（推荐使用pnpm作为包管理器）
 
 ### 安装步骤
 
 1. 克隆项目
+
 ```bash
 git clone https://github.com/ni00/FERusher.git
 cd FERusher
 ```
 
 2. 安装依赖
+
 ```bash
 pnpm install
 ```
 
 3. 开发模式运行
+
 ```bash
 pnpm dev
 ```
 
 4. 构建生产版本
+
 ```bash
 pnpm build
 ```
 
 5. 启动生产版本
+
 ```bash
 pnpm start
 ```
@@ -81,4 +86,4 @@ pnpm start
 
 ## 许可证
 
-MIT License 
+MIT License
