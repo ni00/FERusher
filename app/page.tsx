@@ -16,8 +16,6 @@ import {
   ArrowUp,
   Settings,
   Bot,
-  Moon,
-  Sun,
   Copy,
   Github,
   X,
@@ -45,18 +43,15 @@ import { useMobile } from "@/hooks/use-mobile"
 import { Question, Questions, categories, companies, levels } from "@/lib/interview-data"
 import { getAiAnalysis as fetchAiAnalysis, AiSettings } from "@/lib/openai"
 import { defaultAiSettings } from "@/lib/ai-defaults"
-import { useTheme } from "next-themes"
 import Markdown from "@/app/components/markdown"
+import { ThemeToggle } from "@/app/components/theme-toggle"
 
 export default function InterviewQuestionsPage() {
   const isMobile = useMobile()
   const { toast } = useToast()
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
   const [showGithubBanner, setShowGithubBanner] = useState(true)
 
   useEffect(() => {
-    setMounted(true)
     // 从localStorage中读取横幅显示状态
     const bannerState = localStorage.getItem("githubBannerClosed")
     if (bannerState === "true") {
@@ -731,32 +726,6 @@ export default function InterviewQuestionsPage() {
     )
   }
 
-  // 在顶部导航栏添加主题切换按钮
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
-  }
-
-  // 修改主题切换按钮渲染逻辑
-  const renderThemeToggle = () => {
-    // 如果未挂载，返回一个占位按钮，避免水合错误
-    if (!mounted) {
-      return (
-        <Button variant="outline" size="sm" className="flex items-center gap-1">
-          <span className="h-4 w-4" />
-          <span className="hidden sm:inline">主题</span>
-        </Button>
-      )
-    }
-
-    // 挂载后根据当前主题渲染正确的图标和文本
-    return (
-      <Button variant="outline" size="sm" onClick={toggleTheme} className="flex items-center gap-1">
-        {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-        <span className="hidden sm:inline">{theme === "light" ? "暗黑模式" : "明亮模式"}</span>
-      </Button>
-    )
-  }
-
   // 添加复制AI分析的函数
   const copyAiAnalysis = (questionContent: string, analysisContent: string) => {
     const textToCopy = `问题：${questionContent}\n\n分析：\n${analysisContent}`;
@@ -806,8 +775,8 @@ export default function InterviewQuestionsPage() {
           <h1 className="text-2xl font-bold">FERusher | 切图仔，冲冲冲！</h1>
 
           <div className="flex flex-wrap gap-2">
-            {renderThemeToggle()}
-            
+            <ThemeToggle />
+             
             <Button variant="outline" size="sm" onClick={getRandomQuestion} className="flex items-center gap-1">
               <Shuffle className="h-4 w-4" />
               <span className="hidden sm:inline">随机题目</span>
