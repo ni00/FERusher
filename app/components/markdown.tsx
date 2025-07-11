@@ -1,10 +1,10 @@
 "use client";
 
-import { memo } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
-import rehypeSanitize from 'rehype-sanitize';
+import { memo } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
 
 interface MarkdownProps {
   content: string;
@@ -24,6 +24,6 @@ const Markdown = memo(({ content, className = "" }: MarkdownProps) => {
   );
 });
 
-Markdown.displayName = 'Markdown';
+Markdown.displayName = "Markdown";
 
-export default Markdown; 
+export default Markdown;

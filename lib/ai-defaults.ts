@@ -1,4 +1,4 @@
-import { AiSettings } from "./openai"
+import { AiSettings } from "./openai";
 
 /**
  * 默认的AI设置
@@ -38,4 +38,4 @@ export const defaultAiSettings: AiSettings = {
 [给出准备此类问题的具体建议]
 
 问题: {question}`,
-} 
+};

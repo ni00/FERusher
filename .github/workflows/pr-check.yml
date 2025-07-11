@@ -1,0 +1,57 @@
+name: Check of pull request
+
+# 这里业务方根据需求设置
+on:
+  pull_request:
+    branches: ["master"]
+    types: [opened, synchronize, reopened]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "8.15.9"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Check code formatting
+        run: |
+          echo "Checking code formatting with Prettier..."
+          if pnpm run format:check 2>/dev/null; then
+            echo "✅ Code formatting is correct"
+          else
+            echo "❌ Code formatting issues detected"
+            echo "Run 'pnpm format' to fix formatting issues"
+            exit 1
+          fi
+        continue-on-error: false
+
+      - name: Run ESLint
+        run: |
+          echo "Running ESLint..."
+          if pnpm run lint 2>/dev/null; then
+            echo "✅ ESLint passed"
+          else
+            echo "❌ ESLint failed"
+            echo "Run 'pnpm lint:fix' to fix linting issues"
+            exit 1
+          fi
+        continue-on-error: false

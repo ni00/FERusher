@@ -1,37 +1,38 @@
-import OpenAI from "openai"
+import OpenAI from "openai";
 
 export interface AiSettings {
-  apiKey: string
-  model: string
-  baseUrl: string
-  prompt: string
-  streaming: boolean
+  apiKey: string;
+  model: string;
+  baseUrl: string;
+  prompt: string;
+  streaming: boolean;
 }
 
 export async function getAiAnalysis(
-  question: string, 
-  settings: AiSettings, 
+  question: string,
+  settings: AiSettings,
   onChunk?: (chunk: string) => void
 ): Promise<string> {
   try {
     if (!settings.apiKey) {
       if (settings.streaming && onChunk) {
         // 模拟流式输出
-        const mockAnalysis = getMockAnalysisText(question)
-        const chunks = mockAnalysis.split(' ')
-        
-        let cumulativeText = ""
-        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-        
+        const mockAnalysis = getMockAnalysisText(question);
+        const chunks = mockAnalysis.split(" ");
+
+        let cumulativeText = "";
+        const delay = (ms: number) =>
+          new Promise(resolve => setTimeout(resolve, ms));
+
         for (const chunk of chunks) {
-          await delay(50)
-          cumulativeText += chunk + " "
-          onChunk(cumulativeText)
+          await delay(50);
+          cumulativeText += chunk + " ";
+          onChunk(cumulativeText);
         }
-        
-        return cumulativeText
+
+        return cumulativeText;
       }
-      return getMockAnalysis(question)
+      return getMockAnalysis(question);
     }
 
     // 初始化OpenAI客户端
@@ -39,11 +40,11 @@ export async function getAiAnalysis(
       apiKey: settings.apiKey,
       baseURL: settings.baseUrl,
       dangerouslyAllowBrowser: true, // 允许在浏览器环境中运行
-    })
-    
+    });
+
     // 替换提示词中的问题占位符
-    const processedPrompt = settings.prompt.replace('{question}', question)
-    
+    const processedPrompt = settings.prompt.replace("{question}", question);
+
     if (settings.streaming && onChunk) {
       // 使用流式API
       const stream = await openai.chat.completions.create({
@@ -51,24 +52,24 @@ export async function getAiAnalysis(
         messages: [
           {
             role: "system",
-            content: processedPrompt
-          }
+            content: processedPrompt,
+          },
         ],
         temperature: 0.7,
         stream: true,
-      })
-      
-      let cumulativeContent = ""
-      
+      });
+
+      let cumulativeContent = "";
+
       for await (const chunk of stream) {
         // 累积内容
         if (chunk.choices[0]?.delta?.content) {
-          cumulativeContent += chunk.choices[0].delta.content
-          onChunk(cumulativeContent)
+          cumulativeContent += chunk.choices[0].delta.content;
+          onChunk(cumulativeContent);
         }
       }
-      
-      return cumulativeContent
+
+      return cumulativeContent;
     } else {
       // 使用非流式API
       const response = await openai.chat.completions.create({
@@ -76,17 +77,19 @@ export async function getAiAnalysis(
         messages: [
           {
             role: "system",
-            content: processedPrompt
-          }
+            content: processedPrompt,
+          },
         ],
         temperature: 0.7,
-      })
-      
-      return response.choices[0]?.message?.content || "无法生成分析，请检查API设置。"
+      });
+
+      return (
+        response.choices[0]?.message?.content || "无法生成分析，请检查API设置。"
+      );
     }
   } catch (error) {
-    console.error("OpenAI API调用失败:", error)
-    return `分析生成失败: ${error instanceof Error ? error.message : '未知错误'}`
+    console.error("OpenAI API调用失败:", error);
+    return `分析生成失败: ${error instanceof Error ? error.message : "未知错误"}`;
   }
 }
 
@@ -114,14 +117,14 @@ function getMockAnalysisText(question: string): string {
 - 遇到了哪些问题，如何解决的？
 
 ## 准备建议
-要真实使用AI分析功能，请在设置中配置您的OpenAI API密钥。`
+要真实使用AI分析功能，请在设置中配置您的OpenAI API密钥。`;
 }
 
 // 当用户没有设置API密钥时使用的模拟数据
 function getMockAnalysis(question: string): Promise<string> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
-      resolve(getMockAnalysisText(question))
-    }, 1000)
-  })
-} 
+      resolve(getMockAnalysisText(question));
+    }, 1000);
+  });
+}
