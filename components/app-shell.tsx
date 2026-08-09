@@ -45,6 +45,21 @@ const navigation = [
   },
 ] as const;
 
+const githubUrl = "https://github.com/ni00/DevRusher";
+
+function GitHubIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.82-.26.82-.58l-.01-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.75-1.33-1.75-1.09-.75.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.41-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18.76.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22l-.01 3.29c0 .31.21.69.82.57A12 12 0 0 0 12 .3Z" />
+    </svg>
+  );
+}
+
 function isRouteActive(pathname: string, matches: readonly string[]): boolean {
   return matches.some(match =>
     match === "/" ? pathname === match : pathname.startsWith(match)
@@ -101,6 +116,16 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Settings className="size-4 shrink-0" aria-hidden="true" />
               <span className="truncate">设置与数据</span>
             </Link>
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="grid size-10 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="在 GitHub 查看 DevRusher"
+              title="GitHub"
+            >
+              <GitHubIcon className="size-4" />
+            </a>
             <ThemeToggle />
           </div>
         </div>
@@ -118,6 +143,16 @@ export function AppShell({ children }: { children: ReactNode }) {
             DevRusher
           </Link>
           <div className="flex items-center gap-1">
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="grid size-11 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="在 GitHub 查看 DevRusher"
+              title="GitHub"
+            >
+              <GitHubIcon className="size-4" />
+            </a>
             <ThemeToggle />
             <Link
               href="/settings"

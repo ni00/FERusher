@@ -37,13 +37,13 @@ async function digest(value: string): Promise<string> {
 
 export function createAnalysisCacheId(input: {
   questionId: string;
-  answer?: string;
+  analysisInput: string;
   mode: AnalysisMode;
   requests: readonly AnalysisCacheRequest[];
 }): Promise<string> {
   const canonicalInput = {
     questionId: input.questionId,
-    answer: input.answer,
+    analysisInput: input.analysisInput,
     mode: input.mode,
     requests: [...input.requests].sort((left, right) =>
       left.promptId.localeCompare(right.promptId)
@@ -62,7 +62,7 @@ export function getCachedQuestionAnalysis(
 
 export async function getReusableCachedQuestionAnalysis(input: {
   questionId: string;
-  answer?: string;
+  analysisInput: string;
   mode: AnalysisMode;
   requests: readonly AnalysisCacheRequest[];
   superRequests: readonly AnalysisCacheRequest[];
@@ -75,7 +75,7 @@ export async function getReusableCachedQuestionAnalysis(input: {
 
   const superId = await createAnalysisCacheId({
     questionId: input.questionId,
-    answer: input.answer,
+    analysisInput: input.analysisInput,
     mode: "super",
     requests: input.superRequests,
   });

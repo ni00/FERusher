@@ -198,19 +198,25 @@ export function buildQuestionAnalysisInput({
   question: Question;
   answer?: string;
 }): string {
+  const audienceLabels = question.audiences.map(audience =>
+    audience === "campus" ? "校招" : "社招"
+  );
   const metadata = [
-    `方向：${getTrack(question.trackId).label}`,
+    `分类：${getTrack(question.trackId).label}`,
     `主题：${question.topicLabel}`,
     `题型：${getQuestionTypeLabel(question.questionType)}`,
-    `难度：${getDifficultyLabel(question.difficulty)}`,
-    question.company ? `公司：${question.company}` : "",
-    question.interviewStage ? `轮次：${question.interviewStage}` : "",
+    `难度：${getDifficultyLabel(question.difficulty)}（${question.difficulty}/5）`,
+    audienceLabels.length ? `适用人群：${audienceLabels.join("、")}` : "",
+    question.tags.length ? `标签：${question.tags.join("、")}` : "",
+    question.company ? `公司来源：${question.company}` : "",
+    question.interviewStage ? `面试轮次：${question.interviewStage}` : "",
+    question.collectedAt ? `收录日期：${question.collectedAt}` : "",
   ].filter(Boolean);
   const candidateAnswer = answer?.trim();
 
   return [
     "请解析下面这道面试题。不要要求我先作答。",
-    metadata.join("\n"),
+    `题目元数据：\n${metadata.map(item => `- ${item}`).join("\n")}`,
     `题目：\n${question.prompt}`,
     candidateAnswer
       ? `我的回答（可选补充）：\n${candidateAnswer}`

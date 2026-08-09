@@ -69,6 +69,7 @@ export function QuestionAnalysisDialog({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const analysisBodyRef = useRef<HTMLDivElement>(null);
   const abortController = useRef<AbortController>(null);
+  const activeAnalysisRunKey = useRef<string>(undefined);
   const generationVersion = useRef(0);
   const resultQuestionId = useRef<string | undefined>(undefined);
   const { settings, isReady } = useAiSettings();
@@ -84,6 +85,7 @@ export function QuestionAnalysisDialog({
   >({});
   const [isGenerating, setIsGenerating] = useState(false);
   const [cachedAt, setCachedAt] = useState<string>();
+  const [modeQuestionId, setModeQuestionId] = useState<string>();
   const orderedPromptPresets = useMemo(
     () => settings.analysisPromptOrder.map(getAnalysisPromptPreset),
     [settings.analysisPromptOrder]
@@ -120,10 +122,27 @@ export function QuestionAnalysisDialog({
       settings.analysisPrompts,
     ]
   );
+  const analysisInput = useMemo(
+    () => (question ? buildQuestionAnalysisInput({ question, answer }) : ""),
+    [answer, question]
+  );
+  const analysisRunKey = useMemo(
+    () =>
+      question
+        ? JSON.stringify({
+            questionId: question.id,
+            analysisInput,
+            mode,
+            requests: requestSpecs,
+          })
+        : undefined,
+    [analysisInput, mode, question, requestSpecs]
+  );
 
   const abortActiveRequest = useCallback(() => {
     const controller = abortController.current;
     abortController.current = null;
+    activeAnalysisRunKey.current = undefined;
     if (controller && !controller.signal.aborted) {
       controller.abort(new DOMException("题目解析已取消", "AbortError"));
     }
@@ -162,7 +181,8 @@ export function QuestionAnalysisDialog({
       }
 
       try {
-        if (!question || !isReady) return;
+        if (!question || !isReady || !analysisInput || !analysisRunKey) return;
+        activeAnalysisRunKey.current = analysisRunKey;
         if (!isAiEndpointReady(settings)) {
           setErrors({
             [fallbackPromptId]: "请先配置模型 API Key，再解析题目。",
@@ -172,7 +192,7 @@ export function QuestionAnalysisDialog({
 
         const cacheInput = {
           questionId: question.id,
-          answer,
+          analysisInput,
           mode,
           requests: requestSpecs,
         } as const;
@@ -221,7 +241,6 @@ export function QuestionAnalysisDialog({
           )
         );
 
-        const userInput = buildQuestionAnalysisInput({ question, answer });
         // Create every promise before awaiting any of them. In super mode this
         // starts all three network streams in the same event-loop turn.
         const runningRequests = requestSpecs.map(async request => {
@@ -235,7 +254,7 @@ export function QuestionAnalysisDialog({
               signal: controller.signal,
               messages: [
                 { role: "system", content: request.systemPrompt },
-                { role: "user", content: userInput },
+                { role: "user", content: analysisInput },
               ],
               onText: content => {
                 if (
@@ -325,13 +344,15 @@ export function QuestionAnalysisDialog({
       } finally {
         if (runId === generationVersion.current) {
           abortController.current = null;
+          activeAnalysisRunKey.current = undefined;
           setIsGenerating(false);
         }
       }
     },
     [
       abortActiveRequest,
-      answer,
+      analysisInput,
+      analysisRunKey,
       isReady,
       mode,
       question,
@@ -349,23 +370,41 @@ export function QuestionAnalysisDialog({
   }, [open]);
 
   useEffect(() => {
-    if (!open || !isReady) return;
+    if (!open || !isReady || !question) return;
+    if (modeQuestionId === question.id) return;
     setMode(
       settings.superModeByDefault ? "super" : settings.defaultAnalysisPrompt
     );
+    setModeQuestionId(question.id);
   }, [
     isReady,
+    modeQuestionId,
     open,
-    question?.id,
+    question,
     settings.defaultAnalysisPrompt,
     settings.superModeByDefault,
   ]);
 
   useEffect(() => {
-    if (!open || !isReady || !question) return;
+    if (
+      !open ||
+      !isReady ||
+      !question ||
+      modeQuestionId !== question.id ||
+      activeAnalysisRunKey.current === analysisRunKey
+    ) {
+      return;
+    }
     void analyze();
-    return cancelGeneration;
-  }, [analyze, cancelGeneration, isReady, open, question]);
+  }, [analysisRunKey, analyze, isReady, modeQuestionId, open, question]);
+
+  useEffect(
+    () => () => {
+      generationVersion.current += 1;
+      abortActiveRequest();
+    },
+    [abortActiveRequest]
+  );
 
   const visiblePromptId =
     mode === "super" ? settings.defaultAnalysisPrompt : mode;
@@ -377,7 +416,6 @@ export function QuestionAnalysisDialog({
       ref={dialogRef}
       onCancel={event => {
         event.preventDefault();
-        cancelGeneration();
         onClose();
       }}
       onClose={onClose}
@@ -398,11 +436,8 @@ export function QuestionAnalysisDialog({
           size="icon"
           variant="ghost"
           className="-mr-2 -mt-2 shrink-0"
-          aria-label="关闭解析"
-          onClick={() => {
-            cancelGeneration();
-            onClose();
-          }}
+          aria-label="关闭解析窗口"
+          onClick={onClose}
         >
           <X aria-hidden="true" />
         </Button>
