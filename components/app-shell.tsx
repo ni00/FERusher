@@ -89,17 +89,18 @@ export function AppShell({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="border-t border-border p-3">
-          <Link
-            href="/settings"
-            className={cn(
-              "flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              pathname.startsWith("/settings") && "bg-primary-soft text-primary"
-            )}
-          >
-            <Settings className="size-4" aria-hidden="true" />
-            设置与数据
-          </Link>
-          <div className="mt-2 flex justify-end px-1">
+          <div className="flex items-center gap-1">
+            <Link
+              href="/settings"
+              className={cn(
+                "flex h-10 min-w-0 flex-1 items-center gap-3 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                pathname.startsWith("/settings") &&
+                  "bg-primary-soft text-primary"
+              )}
+            >
+              <Settings className="size-4 shrink-0" aria-hidden="true" />
+              <span className="truncate">设置与数据</span>
+            </Link>
             <ThemeToggle />
           </div>
         </div>
@@ -120,7 +121,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <ThemeToggle />
             <Link
               href="/settings"
-              className="grid size-10 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="grid size-11 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="设置与数据"
             >
               <Settings className="size-4" aria-hidden="true" />
