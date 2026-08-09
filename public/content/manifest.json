@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "v1-5b0f02467889",
+  "generatedAt": "2026-08-09T15:26:29.103Z",
+  "totalQuestions": 24791,
+  "targets": {
+    "launchPerTrack": 2000,
+    "stableMinPerTrack": 3000,
+    "stableMaxPerTrack": 5000,
+    "monthlyRefreshMin": 100,
+    "monthlyRefreshMax": 300
+  },
+  "tracks": [
+    {
+      "id": "fundamentals",
+      "count": 5000,
+      "checksum": "a6328903e851fb38944362b7ae359637f9aa718931c7ebe158d587cda7014edc",
+      "launchReady": true,
+      "topicCount": 11,
+      "rewrittenCount": 5000,
+      "file": "/content/packs/v1-5b0f02467889/fundamentals.json"
+    },
+    {
+      "id": "frontend",
+      "count": 5000,
+      "checksum": "fcdc716689ea37db0a7844d0c19e91ccc69c7f49d65dcb9f06203f5a4b425fa1",
+      "launchReady": true,
+      "topicCount": 10,
+      "rewrittenCount": 5000,
+      "file": "/content/packs/v1-5b0f02467889/frontend.json"
+    },
+    {
+      "id": "backend",
+      "count": 2305,
+      "checksum": "cb178892d865daa9ed1b323ededb2f835295b441d208a295f8f9104cef003298",
+      "launchReady": true,
+      "topicCount": 15,
+      "rewrittenCount": 2305,
+      "file": "/content/packs/v1-5b0f02467889/backend.json"
+    },
+    {
+      "id": "mobile",
+      "count": 2257,
+      "checksum": "6f58c9b02f3b9443bffb714563681432d0a03896fedb18ab146211dce7ebf2c4",
+      "launchReady": true,
+      "topicCount": 11,
+      "rewrittenCount": 2257,
+      "file": "/content/packs/v1-5b0f02467889/mobile.json"
+    },
+    {
+      "id": "quality",
+      "count": 2069,
+      "checksum": "2ce5af824638ddee4cbe387d154127082a601e7aa0af6e6cb6894dfae560d835",
+      "launchReady": true,
+      "topicCount": 12,
+      "rewrittenCount": 2069,
+      "file": "/content/packs/v1-5b0f02467889/quality.json"
+    },
+    {
+      "id": "platform",
+      "count": 2005,
+      "checksum": "02018e4a7571c0ff92caf49215d9801d1d5489206f796cf7c933a2678a2ec0d5",
+      "launchReady": true,
+      "topicCount": 14,
+      "rewrittenCount": 2005,
+      "file": "/content/packs/v1-5b0f02467889/platform.json"
+    },
+    {
+      "id": "llm-algorithm",
+      "count": 2002,
+      "checksum": "4fe2f6dca7ac251e6d68b4d2064e4bf613c767c59289dba1dd982f9384ae2eaf",
+      "launchReady": true,
+      "topicCount": 12,
+      "rewrittenCount": 2002,
+      "file": "/content/packs/v1-5b0f02467889/llm-algorithm.json"
+    },
+    {
+      "id": "agent-evaluation",
+      "count": 2001,
+      "checksum": "f75e87350cec94fb0f92b27304aa98407e0313d037bfd4241aa89a1497bcff04",
+      "launchReady": true,
+      "topicCount": 12,
+      "rewrittenCount": 2001,
+      "file": "/content/packs/v1-5b0f02467889/agent-evaluation.json"
+    },
+    {
+      "id": "agent-engineering",
+      "count": 2152,
+      "checksum": "5ba01531df53b0886a514075243fc4b660561cd84fb923f09041e2db980ff045",
+      "launchReady": true,
+      "topicCount": 12,
+      "rewrittenCount": 2152,
+      "file": "/content/packs/v1-5b0f02467889/agent-engineering.json"
+    }
+  ]
+}

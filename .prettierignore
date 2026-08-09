@@ -9,6 +9,7 @@ dist/
 
 # Generated files
 coverage
+AGENTS.md
 
 public
 
@@ -47,7 +48,8 @@ package-lock.json
 
 # Auto-generated files
 components.json
-ui/
 
 # Data files
 fe.json
+content/seeds/ferusher-legacy.json
+content/work/

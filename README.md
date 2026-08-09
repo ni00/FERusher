@@ -1,91 +1,77 @@
-# FERusher - 切图仔，冲冲冲！
+# DevRusher
 
-## 项目简介
+DevRusher 是面向程序员校招与社招的本地优先面试学习工具，适合短期冲刺、长期刷题和模拟面试。
 
-![网页图片](./example/web.png)
+当前题库收录
+**24,791 道题目**，覆盖计算机基础、前端、后端、移动端、质量与测试、平台与运维、大模型算法、Agent 评测和 Agent 工程九个方向。准确题量以
+[题包清单](./public/content/manifest.json) 为准。
 
-FERusher 是一个专为前端开发者打造的面试题练习平台。
+## 功能
 
-该项目收集了大量来自不同公司、不同面试环节的**上万道**真实面试题，并提供了多种筛选、搜索、收藏和大语言模型分析功能，帮助开发者更好地准备面试。
+- 按方向、主题、求职阶段、公司和题型筛选题目
+- 收藏、学习状态、学习计划和间隔复习
+- 单模型解析与三模型并行解析，结果自动缓存在本地
+- 10 / 20 / 30 / 60 题练习和逐轮模拟面试
+- PDF、Markdown、TXT 简历本地解析
+- 本地保存学习进度、能力画像、面试记录和解析缓存
+- 明暗主题与移动端适配
 
-包括不限于阿里巴巴、字节跳动、腾讯、百度、美团、京东、滴滴、华为、小米、快手、网易、拼多多、B站、知乎、微软中国、亚马逊中国、ThoughtWorks等知名互联网公司。
+![DevRusher Agent 工程题库](./example/web.png)
 
-## 快速链接
+![DevRusher 超能解析模式](./example/ai.png)
 
-- **在线体验**：[https://fe.inxb.top/](https://fe.inxb.top/) - 立即访问部署网站，开始练习面试题
-- **项目详解**：[https://nixiaobai.com/posts/interview-dataset/](https://nixiaobai.com/posts/interview-dataset/) - 查看详细的博客文章了解更多项目背景与实现细节
+![DevRusher 设置与数据](./example/settings.png)
 
-## 功能特点
-
-- **问题浏览**：查看来自各大互联网公司的前端面试题
-- **多维度筛选**：按公司、难度、分类、评分等多个维度筛选问题
-- **随机题目**：支持随机抽取题目进行练习
-- **收藏功能**：收藏重要问题，便于复习
-- **AI解析**：集成AI功能，对面试问题进行分析和解答
-- **响应式设计**：适配各种设备和屏幕尺寸
-- **暗色模式**：支持明暗主题切换
+项目不提供登录或跨设备同步。API
+Key 不会进入备份文件，学习数据默认只保存在当前浏览器。
 
 ## 技术栈
 
-- **前端框架**：Next.js 15
-- **UI组件**：基于Radix UI的自定义组件
-- **状态管理**：React Hooks
-- **样式解决方案**：Tailwind CSS
-- **AI集成**：OpenAI API
-- **部署**：支持静态部署
+Node.js 26、pnpm 11.20、Next.js 16.3、React 19.2、TypeScript、Tailwind CSS
+4、Vercel AI SDK 和 IndexedDB。
 
-## 安装与使用
+项目采用单体部署与模块化内核，题库、学习进度、AI、模拟面试和内容流水线各自维护边界。
 
-### 环境要求
+## 本地开发
 
-- Node.js 18+
-- pnpm 8+（推荐使用pnpm作为包管理器）
-
-### 安装步骤
-
-1. 克隆项目
+仅支持 Node.js 26。
 
 ```bash
-git clone https://github.com/ni00/FERusher.git
-cd FERusher
-```
-
-2. 安装依赖
-
-```bash
-pnpm install
-```
-
-3. 开发模式运行
-
-```bash
+pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-4. 构建生产版本
+常用命令：
 
 ```bash
-pnpm build
+pnpm check          # 格式、Lint、类型、测试和题包校验
+pnpm build          # 生产构建
 ```
 
-5. 启动生产版本
+## 模型请求与隐私
+
+开发环境通过本机同源代理转发跨域模型请求；生产环境由浏览器直连模型端点，因此端点需要支持 CORS 或提供同源网关。
+
+模型请求不设置最大输出 Token 参数，由模型服务执行自身的原生上限。API
+Key 只保存在当前浏览器，本地代理不记录密钥和模型内容。
+
+## 题库维护
+
+Git 只跟踪 `public/content`
+中可直接部署的最终题包。采集输入、清洗结果和生成报告存放在被 Git 忽略的
+`content` 目录中。
+
+维护题库前，将 `.env.example` 复制为 `.env.local` 并填写内容模型配置：
 
 ```bash
-pnpm start
+pnpm content:clean         # 清洗临时输入
+pnpm content:rewrite       # 批量改写题目
+pnpm content:build         # 生成最终题包
+pnpm content:release-check # 执行发布校验
 ```
 
-### 配置AI功能
+详细流程见[题库维护说明](./content/README.md)。
 
-如需使用AI解析功能，请在设置页面配置
+## License
 
-![设置图片](./example/settings.png)
-
-![AI解析图片](./example/ai.png)
-
-## 贡献指南
-
-欢迎提交Issue和Pull Request来帮助改进此项目。
-
-## 许可证
-
-MIT License
+MIT

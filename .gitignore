@@ -18,6 +18,15 @@ yarn-error.log*
 
 # env files
 .env*
+!.env.example
+
+# local content source and generation workspace
+# Only the final published dataset under /public/content/ is committed.
+/content/inbox/
+/content/work/
+/content/seeds/
+/content/curricula/
+/content/reports/
 
 # vercel
 .vercel

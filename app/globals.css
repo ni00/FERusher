@@ -1,61 +1,141 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.ts";
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 24 95% 53%;
-    --primary-rgb: 245, 124, 0;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 24 95% 53%;
+    color-scheme: light;
+    --font-ui:
+      "Noto Sans SC Variable", "Noto Sans SC", "Microsoft YaHei", ui-sans-serif,
+      system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-code:
+      "JetBrains Mono Variable", "JetBrains Mono", "SFMono-Regular", Consolas,
+      "Liberation Mono", monospace;
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --surface: 0 0% 100%;
+    --surface-raised: 0 0% 100%;
+    --primary: 21 89% 40%;
+    --primary-hover: 18 79% 34%;
+    --primary-soft: 33 100% 96%;
+    --primary-foreground: 0 0% 100%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --border: 214 32% 91%;
+    --input: 214 32% 87%;
+    --ring: 21 89% 40%;
+    --code-background: 222 47% 11%;
+    --code-foreground: 210 40% 98%;
+    --success: 142 72% 29%;
+    --destructive: 0 72% 42%;
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    color-scheme: dark;
+    --background: 210 29% 6%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 24 95% 53%;
-    --primary-rgb: 245, 124, 0;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 24 95% 53%;
+    --surface: 210 31% 10%;
+    --surface-raised: 217 33% 17%;
+    --primary: 24 95% 62%;
+    --primary-hover: 27 96% 72%;
+    --primary-soft: 21 55% 16%;
+    --primary-foreground: 210 31% 10%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 214 32% 82%;
+    --border: 215 25% 22%;
+    --input: 215 25% 28%;
+    --ring: 24 95% 62%;
+    --code-background: 217 33% 13%;
+    --code-foreground: 210 40% 96%;
+    --success: 142 69% 58%;
+    --destructive: 0 91% 71%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
+
+  html {
+    min-width: 320px;
+    background: hsl(var(--background));
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    min-height: 100dvh;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font-ui);
+    font-kerning: normal;
+    text-rendering: optimizeLegibility;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    letter-spacing: inherit;
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-code);
+    font-variant-ligatures: none;
+    font-feature-settings:
+      "liga" 0,
+      "calt" 0;
+  }
+
+  pre {
+    tab-size: 2;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.18);
+  }
+
+  :focus-visible {
+    outline-color: hsl(var(--ring));
+  }
+}
+
+@media (max-width: 639px) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 1rem;
+  }
+}
+
+@media (pointer: coarse) {
+  button,
+  select,
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
+    min-height: 2.75rem;
+  }
+
+  button {
+    min-width: 2.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }
