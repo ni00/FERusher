@@ -7,6 +7,7 @@ RUN npm install --global pnpm@11.20.0
 FROM base AS dependencies
 
 COPY package.json pnpm-lock.yaml ./
+COPY scripts/require-node-26.mjs ./scripts/require-node-26.mjs
 RUN HUSKY=0 pnpm install --frozen-lockfile
 
 FROM base AS builder

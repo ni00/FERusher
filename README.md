@@ -48,8 +48,8 @@ pnpm check          # 格式、Lint、类型、测试和题包校验
 pnpm build          # 生产构建
 ```
 
-Vercel 使用 `Dockerfile.vercel` 以 Node.js 26 容器部署，不依赖平台的 Node.js
-24 构建运行时。
+Vercel 使用 `Dockerfile.vercel` 以 Node.js 26 容器部署；`vercel.json`
+会关闭平台的 Next.js 预设，避免进入仅支持到 Node.js 24 的常规构建运行时。
 
 ## 模型请求与隐私
 
