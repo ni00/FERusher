@@ -48,6 +48,9 @@ pnpm check          # 格式、Lint、类型、测试和题包校验
 pnpm build          # 生产构建
 ```
 
+Vercel 使用 `Dockerfile.vercel` 以 Node.js 26 容器部署，不依赖平台的 Node.js
+24 构建运行时。
+
 ## 模型请求与隐私
 
 开发环境通过本机同源代理转发跨域模型请求；生产环境由浏览器直连模型端点，因此端点需要支持 CORS 或提供同源网关。
