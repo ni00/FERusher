@@ -15,6 +15,7 @@ import {
   getDifficultyLabel,
   getQuestionTypeLabel,
   getTrack,
+  isCoreQuestion,
   questionTypes,
   trackDefinitions,
   type Question,
@@ -60,6 +61,7 @@ export function PracticeWorkspace({
   const [session, setSession] = useState<Question[]>([]);
   const [trackId, setTrackId] = useState<TrackId | "all">(initialTrack);
   const [questionType, setQuestionType] = useState<QuestionType | "all">("all");
+  const [scope, setScope] = useState<"core" | "all">("core");
   const [reviewOnly, setReviewOnly] = useState(initialReviewOnly);
   const [size, setSize] = useState<SessionSize>(initialSize);
   const [index, setIndex] = useState(0);
@@ -70,6 +72,7 @@ export function PracticeWorkspace({
     useQuestionProgress();
 
   const matchesSelection = (question: Question) => {
+    if (scope === "core" && !isCoreQuestion(question)) return false;
     if (trackId !== "all" && question.trackId !== trackId) return false;
     return questionType === "all" || question.questionType === questionType;
   };
@@ -167,6 +170,32 @@ export function PracticeWorkspace({
           </h2>
 
           <div className="mt-6 grid gap-5">
+            <fieldset>
+              <legend className="text-sm font-medium">题库范围</legend>
+              <div className="mt-2 grid grid-cols-2 rounded-md border border-input bg-background p-1">
+                {(
+                  [
+                    ["core", "精选题集"],
+                    ["all", "全部真题"],
+                  ] as const
+                ).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={scope === value}
+                    onClick={() => setScope(value)}
+                    className={`h-9 rounded text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                      scope === value
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+
             <label className="grid gap-2 text-sm font-medium">
               练习方向
               <select

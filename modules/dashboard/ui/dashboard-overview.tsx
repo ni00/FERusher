@@ -48,7 +48,7 @@ export function DashboardOverview() {
             从一道题开始
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-[15px]">
-            选择题目，点击解析；需要时再写下自己的回答。
+            从精选题集开始；需要时再搜索完整真题库。
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link href="/questions" className={buttonStyles()}>
@@ -211,11 +211,11 @@ function TrackCard({
         <span className="truncate">{track.topics.join(" · ")}</span>
         {release ? (
           <span
-            className={`shrink-0 font-medium tabular-nums ${
-              release.launchReady ? "text-success" : "text-muted-foreground"
-            }`}
+            className={`shrink-0 font-medium tabular-nums ${release.count ? "text-success" : "text-muted-foreground"}`}
           >
-            {release.count.toLocaleString("zh-CN")} 题
+            {release.count
+              ? `${release.coreCount.toLocaleString("zh-CN")} 精选 · ${release.count.toLocaleString("zh-CN")} 全部`
+              : "待收录"}
           </span>
         ) : null}
       </div>

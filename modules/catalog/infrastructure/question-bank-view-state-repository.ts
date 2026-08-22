@@ -20,6 +20,7 @@ interface StoredQuestionBankViewState {
 }
 
 const filtersSchema = z.object({
+  scope: z.enum(["core", "all"]),
   search: z.string().max(500),
   trackId: z.union([z.literal("all"), z.enum(trackIds)]),
   topicId: z.string().min(1).max(200),
@@ -44,6 +45,7 @@ const viewStateSchema = z.object({
 
 export const defaultQuestionBankViewState: QuestionBankViewState = {
   filters: {
+    scope: "core",
     search: "",
     trackId: "all",
     topicId: "all",

@@ -31,6 +31,9 @@ export function getPromptScienceRisk(prompt) {
   if (/成为常态风险/.test(prompt)) {
     return "unqualified-frequency-claim";
   }
+  if (/全线崩溃/.test(prompt)) {
+    return "unqualified-collapse-claim";
+  }
   if (
     /^针对「.+」可能引发的「.+」，你会设置什么容量基线、告警阈值和自动化处置？$/.test(
       prompt
@@ -68,6 +71,23 @@ export function getPromptPremiseRisk(prompt) {
   return undefined;
 }
 
+export function getPromptContextRisk(prompt) {
+  if (/\*\*|^(?:answer|答案)\s*[:：]/i.test(prompt)) {
+    return "unparsed-source-markup";
+  }
+  if (/对吧[？?]?$/.test(prompt)) {
+    return "context-dependent-rhetorical-question";
+  }
+  if (
+    /(?:last|previous|above|below|following) question|(?:this|the following) (?:table|diagram|image|figure|code|snippet|design)|(?:下|上|前)(?:一|道)?题|(?:如下|上面|下面)的?(?:代码|表格|图片|架构图)/i.test(
+      prompt
+    )
+  ) {
+    return "missing-source-context";
+  }
+  return undefined;
+}
+
 export function getPromptSkeleton(prompt) {
   return String(prompt)
     .trim()
@@ -101,34 +121,3 @@ export function getSkeletonConcentration(questions) {
     top,
   };
 }
-
-export function getRewriteRejection(original, rewrite) {
-  if (!rewrite || typeof rewrite !== "object") return "invalid-rewrite";
-  if (rewrite.id !== original.id) return "id-mismatch";
-  if (typeof rewrite.prompt !== "string") return "missing-prompt";
-  const prompt = rewrite.prompt.trim();
-  if (prompt.length < 12) return "prompt-too-short";
-  if (prompt.length > 500) return "prompt-too-long";
-  if (/https?:\/\/|www\.|来源\s*[:：]/i.test(prompt)) {
-    return "source-leak-in-prompt";
-  }
-  if (
-    /作为(?:一个|一名)?(?:ai|人工智能)|无法回答|根据提供的信息/i.test(prompt)
-  ) {
-    return "model-meta-output";
-  }
-  const qualityRejection = getPromptQualityRejection(prompt);
-  if (qualityRejection) return qualityRejection;
-  const premiseRisk = getPromptPremiseRisk(prompt);
-  if (premiseRisk) return premiseRisk;
-  const scienceRisk = getPromptScienceRisk(prompt);
-  if (scienceRisk) return scienceRisk;
-  if (
-    isKnownGeneratedTemplate(original.prompt) &&
-    isKnownGeneratedTemplate(prompt)
-  ) {
-    return "generated-template-not-rewritten";
-  }
-  return undefined;
-}
-import { getPromptQualityRejection } from "./prompt-quality.mjs";

@@ -2,13 +2,13 @@
 
 DevRusher 是面向程序员校招与社招的本地优先面试学习工具，适合短期冲刺、长期刷题和模拟面试。
 
-当前题库收录
-**24,791 道题目**，覆盖计算机基础、前端、后端、移动端、质量与测试、平台与运维、大模型算法、Agent 评测和 Agent 工程九个方向。准确题量以
-[题包清单](./public/content/manifest.json) 为准。
+题库分为可完成的精选题集和可搜索的完整真题库。当前收录
+**6,697 道去重题目、6,760 条可追溯出现记录**，其中精选题集 1,000 题；本次整理后的九个方向均不少于 500 题，前端完整题库为 1,900 题。不再通过模板生成题目或重复改写凑数量，准确统计以[题包清单](./public/content/manifest.json)为准。
 
 ## 功能
 
-- 按方向、主题、求职阶段、公司和题型筛选题目
+- 在精选题集与完整真题库之间切换
+- 按方向、主题、求职阶段、公司和题型筛选
 - 收藏、学习状态、学习计划和间隔复习
 - 单模型解析与三模型并行解析，结果自动缓存在本地
 - 10 / 20 / 30 / 60 题练习和逐轮模拟面试
@@ -49,8 +49,8 @@ pnpm build          # 生产构建
 ```
 
 Vercel 通过 `Dockerfile.vercel` 部署 Node.js 26 容器。首次连接时，在 Build and
-Deployment 中将 Framework Preset 设为 `Services`；否则平台会忽略容器服务并回退到
-Node.js 24。
+Deployment 中将 Framework Preset 设为
+`Services`；否则平台会忽略容器服务并回退到Node.js 24。
 
 ## 模型请求与隐私
 
@@ -62,17 +62,16 @@ Key 只保存在当前浏览器，本地代理不记录密钥和模型内容。
 ## 题库维护
 
 Git 只跟踪 `public/content`
-中可直接部署的最终题包。采集输入、清洗结果和生成报告存放在被 Git 忽略的
-`content` 目录中。
-
-维护题库前，将 `.env.example` 复制为 `.env.local` 并填写内容模型配置：
+中可直接部署的最终题包。原始仓库、文章快照、导入结果和报告存放在被 Git 忽略的
+`content` 工作区中。
 
 ```bash
-pnpm content:clean         # 清洗临时输入
-pnpm content:rewrite       # 批量改写题目
+pnpm content:import        # 从已确认来源导入并语义去重
 pnpm content:build         # 生成最终题包
 pnpm content:release-check # 执行发布校验
 ```
+
+每道发布题目必须保留至少一条来源记录。模型不能扩写题干、补充条件或冒充真实面试来源。
 
 详细流程见[题库维护说明](./content/README.md)。
 

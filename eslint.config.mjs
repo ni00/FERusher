@@ -18,6 +18,11 @@ export default defineConfig([
   globalIgnores([
     ".next/**",
     "coverage/**",
+    "content/curricula/**",
+    "content/inbox/**",
+    "content/reports/**",
+    "content/seeds/**",
+    "content/work/**",
     "public/content/**",
     "next-env.d.ts",
   ]),

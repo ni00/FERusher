@@ -13,6 +13,7 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Button, buttonStyles } from "@/components/ui/button";
 import {
   getTrack,
+  isCoreQuestion,
   trackDefinitions,
   type Question,
   type TrackId,
@@ -58,7 +59,7 @@ export function LearningPlanWorkspace() {
       listReviewEvents(),
     ])
       .then(([catalog, events]) => {
-        setQuestions(catalog);
+        setQuestions(catalog.filter(isCoreQuestion));
         setReviewEvents(events);
       })
       .catch(loadError => {

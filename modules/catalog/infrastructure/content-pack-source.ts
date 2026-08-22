@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+  questionSourceKinds,
   questionTypes,
   trackIds,
   type Question,
@@ -22,30 +23,50 @@ const questionSchema = z.object({
   ]),
   audiences: z.array(z.enum(["campus", "experienced"])).min(1),
   tags: z.array(z.string()),
+  collectionIds: z.array(z.string().min(1)),
+  occurrences: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        sourceId: z.string().min(1),
+        sourceKind: z.enum(questionSourceKinds),
+        sourceTitle: z.string().min(1),
+        sourceUrl: z.string().url(),
+        originalPrompt: z.string().min(2),
+        publishedAt: z.string().optional(),
+        company: z.string().optional(),
+        interviewStage: z.string().optional(),
+      })
+    )
+    .min(1),
   interviewStage: z.string().optional(),
   company: z.string().optional(),
   collectedAt: z.string().optional(),
 });
 
 const manifestSchema = z.object({
-  schemaVersion: z.literal(1),
+  schemaVersion: z.literal(2),
   contentVersion: z.string().min(1),
   generatedAt: z.string(),
   totalQuestions: z.number().int().nonnegative(),
-  targets: z.object({
-    launchPerTrack: z.number().int().positive(),
-    stableMinPerTrack: z.number().int().positive(),
-    stableMaxPerTrack: z.number().int().positive(),
-    monthlyRefreshMin: z.number().int().positive(),
-    monthlyRefreshMax: z.number().int().positive(),
-  }),
+  coreQuestions: z.number().int().nonnegative(),
+  totalOccurrences: z.number().int().nonnegative(),
+  collections: z.array(
+    z.object({
+      id: z.string().min(1),
+      label: z.string().min(1),
+      description: z.string().min(1),
+      questionCount: z.number().int().nonnegative(),
+    })
+  ),
   tracks: z.array(
     z.object({
       id: z.enum(trackIds),
       count: z.number().int().nonnegative(),
       file: z.string().startsWith("/content/packs/"),
       checksum: z.string().length(64),
-      launchReady: z.boolean(),
+      coreCount: z.number().int().nonnegative(),
+      occurrenceCount: z.number().int().nonnegative(),
       topicCount: z.number().int().nonnegative(),
     })
   ),

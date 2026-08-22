@@ -21,10 +21,8 @@
     "content:build": "node scripts/content/build.mjs",
     "content:check": "node scripts/content/build.mjs --check && node scripts/content/audit.mjs",
     "content:audit": "node scripts/content/audit.mjs --report",
-    "content:release-check": "node scripts/content/build.mjs --check --release && node scripts/content/audit.mjs --strict-language",
-    "content:clean": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/content/clean-with-model.mjs",
-    "content:rewrite": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/content/rewrite-with-model.mjs",
-    "content:rewrite:check": "node scripts/content/rewrite-with-model.mjs --check",
+    "content:release-check": "node scripts/content/build.mjs --check && node scripts/content/audit.mjs",
+    "content:import": "node scripts/content/import-real-sources.mjs",
     "prepare": "husky"
   },
   "dependencies": {

@@ -28,6 +28,25 @@ export const questionTypes = [
 ] as const;
 export type QuestionType = (typeof questionTypes)[number];
 
+export const questionSourceKinds = [
+  "firsthand",
+  "curated-repository",
+  "technical-community",
+] as const;
+export type QuestionSourceKind = (typeof questionSourceKinds)[number];
+
+export interface QuestionOccurrence {
+  id: string;
+  sourceId: string;
+  sourceKind: QuestionSourceKind;
+  sourceTitle: string;
+  sourceUrl: string;
+  originalPrompt: string;
+  publishedAt?: string;
+  company?: string;
+  interviewStage?: string;
+}
+
 export interface Question {
   id: string;
   trackId: TrackId;
@@ -38,9 +57,28 @@ export interface Question {
   difficulty: Difficulty;
   audiences: Audience[];
   tags: string[];
+  collectionIds: string[];
+  occurrences: QuestionOccurrence[];
   interviewStage?: string;
   company?: string;
   collectedAt?: string;
+}
+
+export function isCoreQuestion(question: Question): boolean {
+  return question.collectionIds.some(collectionId =>
+    collectionId.endsWith("-core")
+  );
+}
+
+export function getQuestionCompanies(question: Question): string[] {
+  return [
+    ...new Set(
+      [
+        question.company,
+        ...question.occurrences.map(occurrence => occurrence.company),
+      ].filter((value): value is string => Boolean(value))
+    ),
+  ];
 }
 
 export interface TrackDefinition {

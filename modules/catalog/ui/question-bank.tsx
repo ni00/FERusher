@@ -20,6 +20,7 @@ import {
 } from "../application/filter-questions";
 import {
   getDifficultyLabel,
+  getQuestionCompanies,
   difficultyLevels,
   getQuestionTypeLabel,
   getTrack,
@@ -282,7 +283,43 @@ export function QuestionBank() {
         className="rounded-lg border border-border bg-surface p-3 sm:p-4"
         aria-label="题库筛选"
       >
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-[minmax(14rem,1.25fr)_repeat(6,minmax(7.5rem,1fr))]">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div
+            className="inline-flex rounded-md border border-input bg-background p-1"
+            role="radiogroup"
+            aria-label="题库范围"
+          >
+            {(
+              [
+                ["core", "精选题集"],
+                ["all", "全部真题"],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                role="radio"
+                aria-checked={filters.scope === value}
+                onClick={() => updateFilter("scope", value)}
+                className={cn(
+                  "h-8 rounded px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  filters.scope === value
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground" aria-live="polite">
+            {isUpdating ? "正在加载题包 · " : null}
+            {filters.scope === "core" ? "精选" : "全部"}{" "}
+            {filteredQuestions.length.toLocaleString("zh-CN")} 题
+          </p>
+        </div>
+
+        <div className="mt-3 grid grid-cols-2 gap-3 border-t border-border pt-3 lg:grid-cols-3 xl:grid-cols-[minmax(14rem,1.25fr)_repeat(6,minmax(7.5rem,1fr))]">
           <label className="relative col-span-2 block xl:col-span-1">
             <span className="sr-only">搜索题目、公司或标签</span>
             <Search
@@ -420,10 +457,6 @@ export function QuestionBank() {
             />
             只看收藏
           </label>
-          <p className="text-xs text-muted-foreground" aria-live="polite">
-            {isUpdating ? "正在加载题包 · " : null}共{" "}
-            {filteredQuestions.length.toLocaleString("zh-CN")} 题
-          </p>
         </div>
       </section>
 
@@ -436,6 +469,7 @@ export function QuestionBank() {
             const progress = records.get(question.id);
             const status = progress?.status ?? "unseen";
             const favorite = progress?.favorite ?? false;
+            const companies = getQuestionCompanies(question);
 
             return (
               <article
@@ -457,14 +491,14 @@ export function QuestionBank() {
                       <span>{getQuestionTypeLabel(question.questionType)}</span>
                       <span aria-hidden="true">·</span>
                       <span>{getDifficultyLabel(question.difficulty)}</span>
-                      {question.company ? (
+                      {companies.length ? (
                         <>
                           <span aria-hidden="true">·</span>
                           <span
                             className="max-w-48 truncate"
-                            title={question.company}
+                            title={companies.join("、")}
                           >
-                            {question.company}
+                            {companies.join("、")}
                           </span>
                         </>
                       ) : null}
@@ -536,7 +570,9 @@ export function QuestionBank() {
         <div className="rounded-lg border border-dashed border-border bg-surface px-5 py-12 text-center">
           <h2 className="text-sm font-semibold">没有符合条件的题目</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            尝试清空搜索、调整筛选条件，或关闭“只看收藏”。
+            {filters.scope === "core"
+              ? "调整筛选条件，或切换到“全部真题”。"
+              : "尝试清空搜索、调整筛选条件，或关闭“只看收藏”。"}
           </p>
         </div>
       )}

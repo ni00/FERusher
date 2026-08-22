@@ -1,6 +1,8 @@
 import {
   getQuestionTypeLabel,
   getDifficultyLabel,
+  getQuestionCompanies,
+  isCoreQuestion,
   type Difficulty,
   type Question,
   type QuestionType,
@@ -8,6 +10,7 @@ import {
 } from "../domain/question";
 
 export interface QuestionFilters {
+  scope: "core" | "all";
   search: string;
   trackId: TrackId | "all";
   topicId: string;
@@ -26,6 +29,7 @@ export function filterQuestions(
   const search = filters.search.trim().toLocaleLowerCase("zh-CN");
 
   return questions.filter(question => {
+    if (filters.scope === "core" && !isCoreQuestion(question)) return false;
     if (filters.trackId !== "all" && question.trackId !== filters.trackId) {
       return false;
     }
@@ -50,7 +54,10 @@ export function filterQuestions(
     ) {
       return false;
     }
-    if (filters.company !== "all" && question.company !== filters.company) {
+    if (
+      filters.company !== "all" &&
+      !getQuestionCompanies(question).includes(filters.company)
+    ) {
       return false;
     }
     if (filters.favoritesOnly && !favoriteIds.has(question.id)) return false;
@@ -63,6 +70,10 @@ export function filterQuestions(
       getDifficultyLabel(question.difficulty),
       getQuestionTypeLabel(question.questionType),
       ...question.tags,
+      ...question.occurrences.flatMap(occurrence => [
+        occurrence.sourceTitle,
+        occurrence.originalPrompt,
+      ]),
     ].some(value => value?.toLocaleLowerCase("zh-CN").includes(search));
   });
 }
@@ -74,9 +85,10 @@ export function getCompanyOptions(
 ): Array<{ name: string; count: number }> {
   const counts = new Map<string, number>();
   for (const question of questions) {
-    if (!question.company) continue;
     if (trackId !== "all" && question.trackId !== trackId) continue;
-    counts.set(question.company, (counts.get(question.company) ?? 0) + 1);
+    for (const company of getQuestionCompanies(question)) {
+      counts.set(company, (counts.get(company) ?? 0) + 1);
+    }
   }
 
   return Array.from(counts, ([name, count]) => ({ name, count }))
