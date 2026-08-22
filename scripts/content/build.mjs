@@ -51,6 +51,19 @@ async function readJson(path) {
   return JSON.parse(await readFile(path, "utf8"));
 }
 
+async function readOptionalTranslations() {
+  try {
+    const value = await readJson(join(root, "content/work/translations.json"));
+    if (value.schemaVersion !== 1 || !Array.isArray(value.items)) {
+      throw new Error("Invalid question translations workspace");
+    }
+    return value.items;
+  } catch (error) {
+    if (error?.code === "ENOENT") return [];
+    throw error;
+  }
+}
+
 function validateOccurrence(occurrence) {
   if (!occurrence?.id || !occurrence.sourceId) return "invalid-occurrence-id";
   if (!sourceKinds.has(occurrence.sourceKind)) return "invalid-source-kind";
@@ -72,7 +85,7 @@ function validateQuestion(question) {
     return "invalid-real-id";
   }
   if (!trackIds.includes(question.trackId)) return "invalid-track";
-  if (!question.prompt?.trim() || question.prompt.length < 6) {
+  if (!question.prompt?.trim() || question.prompt.length < 4) {
     return "invalid-prompt";
   }
   if (question.prompt.length > 1_000) return "prompt-too-long";
@@ -254,7 +267,24 @@ async function buildContent() {
     throw new Error("Invalid curated content workspace");
   }
 
-  const questions = mergeExactDuplicates(curated.questions);
+  const translations = await readOptionalTranslations();
+  const translationById = new Map(translations.map(item => [item.id, item]));
+  const sourceQuestions = mergeExactDuplicates(curated.questions);
+  const translatedQuestions = sourceQuestions.map(question => {
+    const translation = translationById.get(question.id);
+    if (!translation) return question;
+    if (translation.sourcePrompt !== question.prompt) {
+      throw new Error(`${question.id}: stale translation source`);
+    }
+    if (
+      typeof translation.translatedPrompt !== "string" ||
+      !/[\u3400-\u9fff]/.test(translation.translatedPrompt)
+    ) {
+      throw new Error(`${question.id}: invalid Chinese translation`);
+    }
+    return { ...question, prompt: translation.translatedPrompt.trim() };
+  });
+  const questions = mergeExactDuplicates(translatedQuestions);
   const collectionDefinitions = new Map(
     curated.collections.map(collection => [collection.id, collection])
   );
@@ -374,6 +404,7 @@ async function buildContent() {
           contentVersion,
           importedAt: curated.importedAt,
           rawOccurrences: curated.stats?.rawOccurrences,
+          translations: translations.length,
           canonicalQuestions: manifest.totalQuestions,
           coreQuestions: manifest.coreQuestions,
           totalOccurrences: manifest.totalOccurrences,

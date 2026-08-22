@@ -27,6 +27,11 @@ function normalizePrompt(value) {
     .replace(/[\s，。！？、；：,.!?;:()（）【】\[\]"'“”‘’`]/g, "");
 }
 
+function isEnglishOnlyPrompt(value) {
+  const latin = value.match(/[A-Za-z]/g)?.length ?? 0;
+  return latin >= 4 && !/[\u3400-\u9fff]/.test(value);
+}
+
 for (const track of manifest.tracks) {
   const pack = JSON.parse(
     await readFile(join(root, "public", track.file.replace(/^\//, "")), "utf8")
@@ -40,6 +45,9 @@ for (const track of manifest.tracks) {
   allQuestions.push(...pack);
 
   for (const question of pack) {
+    if (isEnglishOnlyPrompt(question.prompt)) {
+      failures.push(`${question.id}: untranslated-english-prompt`);
+    }
     difficultyCounts[question.difficulty] =
       (difficultyCounts[question.difficulty] ?? 0) + 1;
     questionTypeCounts[question.questionType] =

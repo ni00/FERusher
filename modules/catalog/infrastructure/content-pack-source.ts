@@ -12,7 +12,7 @@ const questionSchema = z.object({
   trackId: z.enum(trackIds),
   topicId: z.string().min(1),
   topicLabel: z.string().min(1),
-  prompt: z.string().min(6),
+  prompt: z.string().min(4),
   questionType: z.enum(questionTypes),
   difficulty: z.union([
     z.literal(1),

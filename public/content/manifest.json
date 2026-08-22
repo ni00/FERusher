@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "contentVersion": "v2-b64da31c8bdc",
-  "generatedAt": "2026-08-22T15:43:47.759Z",
-  "totalQuestions": 6697,
-  "coreQuestions": 1000,
+  "contentVersion": "v2-92e79d70ac22",
+  "generatedAt": "2026-08-22T16:24:06.917Z",
+  "totalQuestions": 6696,
+  "coreQuestions": 999,
   "totalOccurrences": 6760,
   "collections": [
     {
@@ -58,13 +58,13 @@
       "id": "quality-library",
       "label": "质量与测试完整题库",
       "description": "有明确来源的质量与测试问题",
-      "questionCount": 626
+      "questionCount": 625
     },
     {
       "id": "quality-core",
       "label": "质量与测试精选",
       "description": "适合优先完成的质量与测试问题",
-      "questionCount": 100
+      "questionCount": 99
     },
     {
       "id": "platform-library",
@@ -126,8 +126,8 @@
         "fundamentals-library": 517,
         "fundamentals-core": 100
       },
-      "checksum": "2c5d56b9a60ae1f725b4eb1e457f969d423333a56a1dd23d3fdfb16119ccde32",
-      "file": "/content/packs/v2-b64da31c8bdc/fundamentals.json"
+      "checksum": "92650a6f0787770a9ecdbf0013c38c2ee6738eac03933ab0b2d8c238c0675566",
+      "file": "/content/packs/v2-92e79d70ac22/fundamentals.json"
     },
     {
       "id": "frontend",
@@ -140,7 +140,7 @@
         "frontend-core": 200
       },
       "checksum": "1489794960b23370da81d9bb44316e90b77cd09c1a0a792b140a214bf1b8e700",
-      "file": "/content/packs/v2-b64da31c8bdc/frontend.json"
+      "file": "/content/packs/v2-92e79d70ac22/frontend.json"
     },
     {
       "id": "backend",
@@ -152,8 +152,8 @@
         "backend-library": 527,
         "backend-core": 100
       },
-      "checksum": "5759fb97a7227e3f8b361ce2fd1a71841e69645f23ac38fb71c06d74dfb4e710",
-      "file": "/content/packs/v2-b64da31c8bdc/backend.json"
+      "checksum": "bb8cd014560a6a473ff718e6230d46ddb563c1b5b8e040833894ca1aad1d912e",
+      "file": "/content/packs/v2-92e79d70ac22/backend.json"
     },
     {
       "id": "mobile",
@@ -165,21 +165,21 @@
         "mobile-library": 557,
         "mobile-core": 100
       },
-      "checksum": "5dd525112a42dddfcce434722d6ff854ed4972ffac59fb221c7f79511417f694",
-      "file": "/content/packs/v2-b64da31c8bdc/mobile.json"
+      "checksum": "c0f0648307904943e213e1833588eb87f4bc00f63b41126ddc0a07fcae3e6372",
+      "file": "/content/packs/v2-92e79d70ac22/mobile.json"
     },
     {
       "id": "quality",
-      "count": 626,
-      "coreCount": 100,
+      "count": 625,
+      "coreCount": 99,
       "occurrenceCount": 636,
       "topicCount": 6,
       "questionsInCollections": {
-        "quality-library": 626,
-        "quality-core": 100
+        "quality-library": 625,
+        "quality-core": 99
       },
-      "checksum": "42a91acdadb061ff835548e722193765e411e5726e071dc6636f165025a3930d",
-      "file": "/content/packs/v2-b64da31c8bdc/quality.json"
+      "checksum": "0de9116b264d41c9bf684fbe54dde9be22e885a94330a6398b1ee67f7caf59d7",
+      "file": "/content/packs/v2-92e79d70ac22/quality.json"
     },
     {
       "id": "platform",
@@ -191,8 +191,8 @@
         "platform-library": 558,
         "platform-core": 100
       },
-      "checksum": "49b091d02ad4507005aa60da737aeedc3b61ff24d2662578bc7fc772652a0f2e",
-      "file": "/content/packs/v2-b64da31c8bdc/platform.json"
+      "checksum": "9d4e4050aada88e966eb037d8438c48e5661f5acfb692c2f10ed9e2cd8c1ccef",
+      "file": "/content/packs/v2-92e79d70ac22/platform.json"
     },
     {
       "id": "llm-algorithm",
@@ -204,8 +204,8 @@
         "llm-algorithm-library": 516,
         "llm-algorithm-core": 100
       },
-      "checksum": "6d554f03098f454e2f34fe3fb49d3fef5ac8f1481f85aff7a36a459cc6c6377b",
-      "file": "/content/packs/v2-b64da31c8bdc/llm-algorithm.json"
+      "checksum": "df892f68a7306c5f69c467c219a12b228def05aa346486358efefbbb05eb72b3",
+      "file": "/content/packs/v2-92e79d70ac22/llm-algorithm.json"
     },
     {
       "id": "agent-evaluation",
@@ -217,8 +217,8 @@
         "agent-evaluation-library": 547,
         "agent-evaluation-core": 100
       },
-      "checksum": "7da90071603fc59275c1890c23d8f2d11d05b36927cd3a08da2c52d1e079d960",
-      "file": "/content/packs/v2-b64da31c8bdc/agent-evaluation.json"
+      "checksum": "5fcefc646937c5e9d5426383bdb04c22983a72d977be46dcdb353a9c1bcda2bc",
+      "file": "/content/packs/v2-92e79d70ac22/agent-evaluation.json"
     },
     {
       "id": "agent-engineering",
@@ -230,8 +230,8 @@
         "agent-engineering-library": 949,
         "agent-engineering-core": 100
       },
-      "checksum": "8ca3919b9714e5934fb5bb82a36d505693d0b4ae1d869d6564aa33840ba1b18a",
-      "file": "/content/packs/v2-b64da31c8bdc/agent-engineering.json"
+      "checksum": "833825154032122ee87395eb6549484605cc4e6848daa6f7972ed521099ee859",
+      "file": "/content/packs/v2-92e79d70ac22/agent-engineering.json"
     }
   ]
 }

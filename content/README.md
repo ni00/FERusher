@@ -38,10 +38,13 @@ DevRusher 只提交 `public/content`
 1. 将确认过的仓库或文章材料放入 `content/inbox`，保留原始 URL、标题和日期。
 2. 运行
    `pnpm content:import`。导入器只做格式整理、分类和语义去重，不增加条件、场景或追问。
-3. 运行 `pnpm content:build` 生成版本化题包。
-4. 运行
+3. 运行
+   `pnpm content:translate`。纯英文题会等义翻译为简体中文；题目 ID 不变，技术名词和代码保留英文，`occurrences.originalPrompt`
+   继续保存来源原文。
+4. 运行 `pnpm content:build` 生成版本化题包。
+5. 运行
    `pnpm content:release-check`，验证来源、结构、校验和、重复项、错误前提和已知生成模板。
-5. 只提交当前版本的 `public/content/manifest.json` 与 `public/content/packs/`。
+6. 只提交当前版本的 `public/content/manifest.json` 与 `public/content/packs/`。
 
 发布门禁只检查来源、字段结构、校验和、重复题、错误前提和已知生成模板，不限制各方向题量，也不设置前端上限、题型配额或月度新增配额。
 
