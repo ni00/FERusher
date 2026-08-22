@@ -270,6 +270,10 @@ function topicForSource(trackId, category, prompt) {
   }
 
   if (trackId === "mobile") {
+    if (/kotlin.?multiplatform|\bkmp\b|lynx|uni-?app/.test(value)) {
+      return ["modern-cross-platform", "现代跨端框架"];
+    }
+    if (/harmony|arkts|arkui/.test(value)) return ["harmonyos", "HarmonyOS"];
     if (/android|kotlin/.test(value)) return ["android", "Android"];
     if (/ios|swift|objective-c/.test(value)) return ["ios", "iOS"];
     if (/flutter/.test(value)) return ["flutter", "Flutter"];
@@ -282,6 +286,9 @@ function topicForSource(trackId, category, prompt) {
       return ["performance-testing", "性能测试"];
     }
     if (/security|安全/.test(value)) return ["security-testing", "安全测试"];
+    if (/fuzz|mutation|property.?based|model.?based/.test(value)) {
+      return ["advanced-testing", "高级测试技术"];
+    }
     if (/selenium|playwright|cypress|automation|自动化/.test(value)) {
       return ["test-automation", "测试自动化"];
     }
@@ -297,7 +304,11 @@ function topicForSource(trackId, category, prompt) {
   if (trackId === "platform") {
     if (/kubernetes|k8s/.test(value)) return ["kubernetes", "Kubernetes"];
     if (/docker|container|oci/.test(value)) return ["containers", "容器与 OCI"];
-    if (/observability|prometheus|grafana|trace|metric|logging/.test(value)) {
+    if (
+      /observability|prometheus|grafana|opentelemetry|ebpf|trace|metric|logging/.test(
+        value
+      )
+    ) {
       return ["observability", "可观测性"];
     }
     if (/sre|reliability|incident|disaster|capacity/.test(value)) {
@@ -322,7 +333,7 @@ function topicForSource(trackId, category, prompt) {
     }
     if (/评测|指标|效果评估/.test(value))
       return ["model-evaluation", "模型评估与可解释性"];
-    if (/推理|vllm|sglang|量化|kv cache/.test(value))
+    if (/推理|vllm|sglang|量化|kv cache|serving/.test(value))
       return ["inference-serving", "推理服务与框架"];
     if (/训练|微调|sft|grpo|dpo|lora|training|fine-tun|rlhf/.test(value))
       return ["post-training", "微调与后训练"];
@@ -738,6 +749,17 @@ const additionalMarkdownSources = [
     classify: classifyAiTrack,
   },
   {
+    directory: "ai-engineering-notes",
+    repository: "GyanendraChaubey/AI-Engineering-Notes",
+    branch: "main",
+    category: "AI Engineering Interviews",
+    mode: "headings",
+    sourceKind: "curated-repository",
+    maxQuestions: 300,
+    classify: classifyAiTrack,
+    include: relativePath => /interview|面试|evaluation/i.test(relativePath),
+  },
+  {
     directory: "agent-guide",
     repository: "adongwanai/AgentGuide",
     branch: "main",
@@ -1075,6 +1097,7 @@ async function importJsonInbox() {
   for (const file of [
     "juejin-firsthand.json",
     "nowcoder-firsthand.json",
+    "nowcoder-expansion.json",
     "selenium-questions.json",
     "technical-community.json",
   ]) {
@@ -1115,6 +1138,38 @@ async function importJsonInbox() {
     });
   }
   return results;
+}
+
+async function readManualCuration() {
+  try {
+    const value = JSON.parse(
+      await readFile(join(inbox, "manual-curation.json"), "utf8")
+    );
+    if (
+      value.schemaVersion !== 1 ||
+      !value.selectedQuestionIdsByTrack ||
+      typeof value.selectedQuestionIdsByTrack !== "object"
+    ) {
+      throw new Error("Invalid manual content curation");
+    }
+    return value.selectedQuestionIdsByTrack;
+  } catch (error) {
+    if (error?.code === "ENOENT") return {};
+    throw error;
+  }
+}
+
+function applyManualCuration(questions, selectedQuestionIdsByTrack) {
+  const selections = new Map(
+    Object.entries(selectedQuestionIdsByTrack).map(([trackId, ids]) => [
+      trackId,
+      new Set(ids),
+    ])
+  );
+  return questions.filter(question => {
+    const selection = selections.get(question.trackId);
+    return !selection || selection.has(question.id);
+  });
 }
 
 function mergeQuestions(rawQuestions) {
@@ -1290,7 +1345,10 @@ const rejectedQuestions = rawQuestions.filter(
 const acceptedQuestions = rawQuestions.filter(raw =>
   isPublishableSourceQuestion(raw)
 );
-const questions = assignCoreCollections(mergeQuestions(acceptedQuestions));
+const manualCuration = await readManualCuration();
+const questions = assignCoreCollections(
+  applyManualCuration(mergeQuestions(acceptedQuestions), manualCuration)
+);
 const publishedOccurrences = questions.reduce(
   (sum, question) => sum + question.occurrences.length,
   0

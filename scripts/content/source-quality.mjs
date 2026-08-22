@@ -78,6 +78,9 @@ export function getPromptContextRisk(prompt) {
   if (/对吧[？?]?$/.test(prompt)) {
     return "context-dependent-rhetorical-question";
   }
+  if (/^(?:why|how|what)\s+(?:is|does)\s+(?:this|that|it)\b/i.test(prompt)) {
+    return "context-dependent-pronoun-question";
+  }
   if (
     /(?:last|previous|above|below|following) question|(?:this|the following) (?:table|diagram|image|figure|code|snippet|design)|(?:下|上|前)(?:一|道)?题|(?:如下|上面|下面)的?(?:代码|表格|图片|架构图)/i.test(
       prompt
