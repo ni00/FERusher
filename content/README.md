@@ -23,7 +23,7 @@ DevRusher 只提交 `public/content`
 - `Question` 是语义去重后的标准题目。
 - `occurrences`
   保存原始问法、来源 URL、来源类型、时间及原文明确声明的公司和轮次。
-- `collectionIds` 维护精选题集；完整题库不设人为上限，精选题集保持可完成。
+- `collectionIds` 维护精选题集；精选题集保持可完成。
 - `firsthand` 表示第一人称面经，`curated-repository`
   表示有明确维护者和历史记录的社区题库。
 
@@ -31,10 +31,25 @@ DevRusher 只提交 `public/content`
 
 当前精选规则为前端 200 题、其余方向各 100 题；按主题轮换，并依次优先第一手面经、可信面试题仓库和技术社区问题。
 
-当前版本曾对前端题库进行一次性整理：保留第一手、多来源和精选题，再按来源可信度、时间、主题与语言骨架筛选至 1,900 题。这是本次内容结果，不是后续导入或发布的固定上限。
+当前版本对九个一级方向进行了一次性换血：优先保留第一手、多来源、官方技术材料和完整的工程问题，删除错分、标题片段、上下文缺失题及低信息量重复题。每个方向的最终题量均低于 1,000 道。
 
 本地 `content/inbox/manual-curation.json`
-保存这次人工保留的前端题目 ID，防止重新导入时恢复已淘汰题；它属于过程数据，不进入 Git，也不构成发布数量门禁。
+保存本次九个方向的保留题目 ID，防止重新导入时恢复已淘汰题；它属于过程数据，不进入 Git，也不构成发布数量门禁。`pnpm content:curate`
+可按来源强度、题目完整性、方向相关性、时效性和主题均衡重新生成这份选择结果。
+
+当前最终题量：
+
+| 方向       | 题量 |
+| ---------- | ---: |
+| 计算机基础 |  401 |
+| 前端工程   |  915 |
+| 后端工程   |  509 |
+| 移动端工程 |  635 |
+| 质量与测试 |  544 |
+| 平台与运维 |  468 |
+| 大模型算法 |  406 |
+| Agent 评测 |  300 |
+| Agent 工程 |  542 |
 
 ## 发布流程
 
@@ -44,12 +59,15 @@ DevRusher 只提交 `public/content`
 3. 运行
    `pnpm content:translate`。纯英文题会等义翻译为简体中文；题目 ID 不变，技术名词和代码保留英文，`occurrences.originalPrompt`
    继续保存来源原文。
-4. 运行 `pnpm content:build` 生成版本化题包。
-5. 运行
+4. 来源工作区发生大规模变化时，按顺序运行
+   `node scripts/content/curate-final-dataset.mjs --clear`、`pnpm content:import`、`pnpm content:curate`、`pnpm content:import`
+   重新生成并应用选择结果。普通重建无需重复此步骤。
+5. 运行 `pnpm content:build` 生成版本化题包。
+6. 运行
    `pnpm content:release-check`，验证来源、结构、校验和、重复项、错误前提和已知生成模板。
-6. 只提交当前版本的 `public/content/manifest.json` 与 `public/content/packs/`。
+7. 只提交当前版本的 `public/content/manifest.json` 与 `public/content/packs/`。
 
-发布门禁只检查来源、字段结构、校验和、重复题、错误前提和已知生成模板，不限制各方向题量，也不设置前端上限、题型配额或月度新增配额。
+发布门禁只检查来源、字段结构、校验和、重复题、错误前提、上下文碎片和已知生成模板。
 
 ## 临时输入
 

@@ -3,6 +3,7 @@ import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { dirname, extname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  getPromptCompletenessRisk,
   getPromptContextRisk,
   getPromptPremiseRisk,
   getPromptScienceRisk,
@@ -1100,6 +1101,7 @@ async function importJsonInbox() {
     "nowcoder-expansion.json",
     "selenium-questions.json",
     "technical-community.json",
+    "latest-trends.json",
   ]) {
     const path = join(inbox, file);
     let value;
@@ -1333,6 +1335,7 @@ function isPublishableSourceQuestion(raw) {
     !looksLikeExplicitQuestion(raw.prompt) ||
     questionMarks > 4 ||
     getPromptContextRisk(raw.prompt) ||
+    getPromptCompletenessRisk(raw.prompt) ||
     getPromptPremiseRisk(raw.prompt) ||
     getPromptScienceRisk(raw.prompt) ||
     isKnownGeneratedTemplate(raw.prompt)

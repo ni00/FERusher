@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  getPromptCompletenessRisk,
   getPromptContextRisk,
   getPromptPremiseRisk,
   getPromptScienceRisk,
@@ -68,6 +69,10 @@ for (const track of manifest.tracks) {
     if (premiseRisk) failures.push(`${question.id}: ${premiseRisk}`);
     const contextRisk = getPromptContextRisk(question.prompt);
     if (contextRisk) failures.push(`${question.id}: ${contextRisk}`);
+    const completenessRisk = getPromptCompletenessRisk(question.prompt);
+    if (completenessRisk) {
+      failures.push(`${question.id}: ${completenessRisk}`);
+    }
     const scienceRisk = getPromptScienceRisk(question.prompt);
     if (scienceRisk) failures.push(`${question.id}: ${scienceRisk}`);
     const questionMarks = question.prompt.match(/[？?]/g)?.length ?? 0;

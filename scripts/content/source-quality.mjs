@@ -91,6 +91,61 @@ export function getPromptContextRisk(prompt) {
   return undefined;
 }
 
+export function getPromptCompletenessRisk(prompt) {
+  const value = String(prompt).trim();
+  if (
+    /^[✅☑️⚠️⭐🔹🔸💡📌🎯🚀]/u.test(value) ||
+    /^L\d+（[^）]+）[-—]/i.test(value)
+  ) {
+    return "source-heading-or-decoration";
+  }
+  if (
+    /^(?:为什么这层重要|为什么这一步重要|设计中的关键考量|关键考量|关键考虑|实际答案|参考答案|面试提示|核心思想|解决方案|工作原理|基本概念|背景|目标|步骤|要点|注意事项|设计挑战与解决方案)[？?。！!：:]*$/.test(
+      value
+    )
+  ) {
+    return "contextless-source-heading";
+  }
+  if (
+    /^(?:解释以下内容|定义所需的模式键|定义请求体模式|定义数据字典|定义数字列表)[。.]?$/.test(
+      value
+    )
+  ) {
+    return "incomplete-source-command";
+  }
+  if (/^(?:是否|有没有|能否|有无).{0,12}[？?]$/.test(value)) {
+    return "contextless-binary-rubric";
+  }
+  if (/^(?:你)?(?:对)?.{0,20}(?:了解过|知道吗|熟悉吗)[？?]$/.test(value)) {
+    return "vague-familiarity-question";
+  }
+  if (/^请说说说/.test(value) || /^请解译/.test(value)) {
+    return "malformed-question-wording";
+  }
+  if (
+    !/[？?]/.test(value) &&
+    /^(?:无法|找不到|只能|不要|使用.+时无法|在.+中无法)/.test(value)
+  ) {
+    return "unframed-error-title";
+  }
+  if (/^为什么\s*2026\s*要重写这张版图/.test(value)) {
+    return "source-article-heading";
+  }
+  if (
+    !/[？?]/.test(value) &&
+    value.length < 16 &&
+    /^(?:解释|定义|声明|初始化|导入|打印|返回|创建|设置|获取|实现|设计|展示|列出)/.test(
+      value
+    )
+  ) {
+    return "underspecified-short-command";
+  }
+  if (/[:：]$/.test(value) && !/[？?]/.test(value)) {
+    return "dangling-source-fragment";
+  }
+  return undefined;
+}
+
 export function getPromptSkeleton(prompt) {
   return String(prompt)
     .trim()

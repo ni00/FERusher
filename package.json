@@ -23,6 +23,7 @@
     "content:audit": "node scripts/content/audit.mjs --report",
     "content:release-check": "node scripts/content/build.mjs --check && node scripts/content/audit.mjs",
     "content:import": "node scripts/content/import-real-sources.mjs",
+    "content:curate": "node scripts/content/curate-final-dataset.mjs",
     "content:translate": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/content/translate-questions.mjs",
     "prepare": "husky"
   },
